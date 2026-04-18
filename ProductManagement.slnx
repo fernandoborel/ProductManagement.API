@@ -1,6 +1,9 @@
 <Solution>
   <Folder Name="/Itens de Solução/">
     <File Path=".github/workflows/productmanagement-pipeline.yml" />
+    <File Path="docker-compose.yml" />
   </Folder>
   <Project Path="ProductManagement.API/ProductManagement.API.csproj" />
+  <Project Path="ProductManagement.Infra.Data.MongoDB/ProductManagement.Infra.Data.MongoDB.csproj" Id="20b7e4eb-83e1-4cdf-b64e-c661d5e66f2c" />
+  <Project Path="ProductManagement.Infra.Data.SqlServer/ProductManagement.Infra.Data.SqlServer.csproj" Id="7a3ccd7b-7e34-4978-bb81-84169de26c07" />
 </Solution>
