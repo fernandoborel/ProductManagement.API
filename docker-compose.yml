@@ -1,0 +1,50 @@
+services:
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: "Coti@2026"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1434:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - productmanagement_network
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - productmanagement_network
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: "27017"
+      ME_CONFIG_BASICAUTH_USERNAME: "admin"
+      ME_CONFIG_BASICAUTH_PASSWORD: "Coti@2026"
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongodb
+    volumes:
+      - mongo_express_data:/data
+    networks:
+      - productmanagement_network
+
+volumes:
+  sqlserver_data:
+  mongodb_data:
+  mongo_express_data:
+
+networks:
+  productmanagement_network:
+    driver: bridge
