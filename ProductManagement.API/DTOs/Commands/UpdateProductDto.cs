@@ -1,7 +1,12 @@
-﻿namespace ProductManagement.API.DTOs.Commands;
+﻿using MediatR;
+using System.Text.Json.Serialization;
 
-public class UpdateProductDto
+namespace ProductManagement.API.DTOs.Commands;
+
+public class UpdateProductDto : IRequest
 {
+    [JsonIgnore]
+    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public decimal Price { get; set; }

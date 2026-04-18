@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using ProductManagement.API.DTOs.Commands;
 using ProductManagement.API.DTOs.Queries;
 
@@ -6,12 +7,13 @@ namespace ProductManagement.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProductsController : ControllerBase
+public class ProductsController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(typeof(ProductResponseDto), 201)]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto dto)
     {
+        await mediator.Send(dto);
         return Ok();
     }
 
@@ -19,6 +21,8 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(typeof(ProductResponseDto), 200)]
     public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] UpdateProductDto dto)
     {
+        dto.Id = id;
+        await mediator.Send(dto);
         return Ok();
     }
 
@@ -26,13 +30,8 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(typeof(ProductStockResponseDto), 200)]
     public async Task<IActionResult> UpdateStock(Guid id, [FromBody] UpdateStockDto dto)
     {
-        return Ok();
-    }
-
-    [HttpDelete("{id:guid}")]
-    [ProducesResponseType(typeof(ProductResponseDto), 200)]
-    public async Task<IActionResult> DeleteProduct(Guid id)
-    {
+        dto.Id = id;
+        await mediator.Send(dto);
         return Ok();
     }
 

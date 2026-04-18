@@ -1,6 +1,11 @@
-﻿namespace ProductManagement.API.DTOs.Commands;
+﻿using MediatR;
+using System.Text.Json.Serialization;
 
-public class UpdateStockDto
+namespace ProductManagement.API.DTOs.Commands;
+
+public class UpdateStockDto : IRequest
 {
+    [JsonIgnore]
+    public Guid Id { get; set; }
     public int Quantity { get; set; }
 }
