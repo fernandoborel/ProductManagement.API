@@ -1,6 +1,8 @@
-﻿namespace ProductManagement.API.DTOs.Commands;
+﻿using MediatR;
 
-public class CreateProductDto
+namespace ProductManagement.API.DTOs.Commands;
+
+public class CreateProductDto : IRequest
 {
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
