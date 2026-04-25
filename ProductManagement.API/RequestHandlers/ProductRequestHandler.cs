@@ -9,11 +9,11 @@ using System.Text.Json;
 namespace ProductManagement.API.RequestHandlers;
 
 public class ProductRequestHandler(IMediator mediator, SqlServerContext context) :
-    IRequestHandler<CreateProductDto>,
-    IRequestHandler<UpdateProductDto>,
-    IRequestHandler<UpdateStockDto>
+    IRequestHandler<CreateProductDto, Guid>,
+    IRequestHandler<UpdateProductDto, Guid>,
+    IRequestHandler<UpdateStockDto, Guid>
 {
-    public async Task Handle(CreateProductDto request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateProductDto request, CancellationToken cancellationToken)
     {
         Debug.WriteLine("Gravando o produto no banco de dados SQL.");
 
@@ -37,9 +37,11 @@ public class ProductRequestHandler(IMediator mediator, SqlServerContext context)
         };
 
         await mediator.Publish(notification);
+
+        return product.Id;
     }
 
-    public async Task Handle(UpdateProductDto request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(UpdateProductDto request, CancellationToken cancellationToken)
     {
         Debug.WriteLine("Atualizando o produto no banco de dados SQL.");
 
@@ -60,13 +62,16 @@ public class ProductRequestHandler(IMediator mediator, SqlServerContext context)
         var notification = new ProductNotification
         {
             Action = ActionNotification.UpdateProduct,
-            Data = JsonSerializer.Serialize(request)
+            Data = JsonSerializer.Serialize(request),
+            Id = product.Id
         };
 
         await mediator.Publish(notification);
+
+        return product.Id;
     }
 
-    public async Task Handle(UpdateStockDto request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(UpdateStockDto request, CancellationToken cancellationToken)
     {
         Debug.WriteLine("Atualizando o estoque do produto no banco de dados SQL.");
 
@@ -85,9 +90,12 @@ public class ProductRequestHandler(IMediator mediator, SqlServerContext context)
         var notification = new ProductNotification
         {
             Action = ActionNotification.UpdateStock,
-            Data = JsonSerializer.Serialize(request)
+            Data = JsonSerializer.Serialize(request),
+            Id = product.Id
         };
 
         await mediator.Publish(notification);
+
+        return product.Id;
     }
 }
