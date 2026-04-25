@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace ProductManagement.API.DTOs.Commands;
 
-public class UpdateProductDto : IRequest
+public class UpdateProductDto : IRequest<Guid>
 {
     [JsonIgnore]
     public Guid Id { get; set; }

@@ -262,3 +262,62 @@ dotnet run
 - **Framework:** ASP.NET Core 10 (.NET 10)
 - **Arquitetura:** Layered Architecture + CQRS
 - **IDE recomendada:** Visual Studio 2026
+
+---
+
+## 🧪 Testes Unitários — `ProductManagement.Infra.Tests`
+
+Projeto de testes unitários criado para validar o comportamento dos handlers de comandos MediatR.
+
+### Tecnologias utilizadas nos testes
+
+| Pacote | Versão | Finalidade |
+|---|---|---|
+| `xUnit` | 2.9.3 | Framework de testes |
+| `Moq` | 4.20.72 | Mock de dependências (`IMediator`) |
+| `Bogus` | 35.6.3 | Geração de dados falsos e realistas |
+| `Microsoft.EntityFrameworkCore.InMemory` | 10.0.6 | Banco de dados em memória para testes isolados |
+
+### Estrutura dos testes
+
+```
+ProductManagement.Infra.Tests/
+├── Fakers/
+│   ├── CreateProductDtoFaker.cs    # Gera CreateProductDto com dados falsos via Bogus
+│   ├── UpdateProductDtoFaker.cs    # Gera UpdateProductDto com dados falsos via Bogus
+│   └── UpdateStockDtoFaker.cs      # Gera UpdateStockDto com dados falsos via Bogus
+└── RequestHandlers/
+    └── ProductRequestHandlerTests.cs  # 11 testes unitários do ProductRequestHandler
+```
+
+### Casos de teste — `ProductRequestHandlerTests`
+
+#### ✅ CreateProduct (3 testes)
+| Teste | Descrição |
+|---|---|
+| `Handle_CreateProduct_ShouldPersistProductAndReturnId` | Verifica que o produto é salvo no banco e retorna um `Guid` válido |
+| `Handle_CreateProduct_ShouldPublishNotification` | Verifica que a notificação `CreateProduct` é publicada via MediatR |
+| `Handle_CreateProduct_ShouldSetCreatedAtToNow` | Verifica que `CreatedAt` é preenchido com a data/hora atual |
+
+#### ✅ UpdateProduct (4 testes)
+| Teste | Descrição |
+|---|---|
+| `Handle_UpdateProduct_ShouldUpdateFieldsAndReturnId` | Verifica que nome, descrição e preço são atualizados corretamente |
+| `Handle_UpdateProduct_ShouldPublishNotification` | Verifica que a notificação `UpdateProduct` é publicada via MediatR |
+| `Handle_UpdateProduct_ShouldThrowWhenProductNotFound` | Verifica que `ApplicationException` é lançada quando o produto não existe |
+| `Handle_UpdateProduct_ShouldSetModifiedAt` | Verifica que `ModifiedAt` é atualizado após a operação |
+
+#### ✅ UpdateStock (4 testes)
+| Teste | Descrição |
+|---|---|
+| `Handle_UpdateStock_ShouldUpdateStockAndReturnId` | Verifica que o estoque é atualizado corretamente |
+| `Handle_UpdateStock_ShouldPublishNotification` | Verifica que a notificação `UpdateStock` é publicada via MediatR |
+| `Handle_UpdateStock_ShouldThrowWhenProductNotFound` | Verifica que `ApplicationException` é lançada quando o produto não existe |
+| `Handle_UpdateStock_ShouldSetModifiedAt` | Verifica que `ModifiedAt` é atualizado após a operação |
+
+### Executar os testes
+
+```bash
+dotnet test ProductManagement.Infra.Tests/ProductManagement.Infra.Tests.csproj
+```
+
